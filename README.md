@@ -1,7 +1,7 @@
 <h1 align="center">missware</h1>
 <div style="display: flex;">
-  <img src="https://i.ibb.co/BwQmXkJ/Auth.png" width=500>
-  <img src="https://i.ibb.co/qRqvLL1/menu.png" width=500>
+  <img src="https://i.ibb.co/BwQmXkJ/Auth.png" width=450>
+  <img src="https://i.ibb.co/qRqvLL1/menu.png" width=450>
 </div>
 ## Описание / Description
 
