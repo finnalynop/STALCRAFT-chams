@@ -1,8 +1,5 @@
 <h1 align="center">missware</h1>
-<div style="display: flex;">
-  <img src="https://i.ibb.co/BwQmXkJ/Auth.png" width=450>
-  <img src="https://i.ibb.co/qRqvLL1/menu.png" width=450>
-</div>
+
 ## Описание / Description
 
 RU: Этот проект представляет собой консольное приложение с авторизацией через **Keyauth**. Приложение предоставляет различные функции и модификации игрового интерфейса.
