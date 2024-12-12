@@ -1,27 +1,33 @@
-﻿#include <iostream>
+﻿#pragma region Includes
+#include <iostream>
+#include <Windows.h>
+#include <string>
+#include <algorithm>
 #include <chrono>
 #include <thread>
 #include <cstdlib>
-#include <Windows.h>
-#include <string>
 #include "memory.h"
 #include "Setting.h"
 
 #include "KeyAuth/skStr.h"
 #include "KeyAuth/auth.hpp"
 #include "KeyAuth/utils.hpp"
+#pragma endregion
 
+#pragma region KeyAuth
 using namespace KeyAuth;
 
-std::string name = skCrypt("killcheat").decrypt(); // App name - VaultCord.com FREE Discord backup bot for members & your entire server saved from terms and nukes!
-std::string ownerid = skCrypt("E6lHRajllG").decrypt(); // Account ID
-std::string secret = skCrypt("2cf746451d1c7d2aa7aabbab3473c0aa4cbf4b9cc2974af60e39003bd7e60a1a").decrypt(); // Application secret (not used in latest C++ example)
-std::string version = skCrypt("1.2").decrypt(); // Application version. Used for automatic downloads see video here https://www.youtube.com/watch?v=kW195PLCBKs
+std::string name = skCrypt("").decrypt();
+std::string ownerid = skCrypt("").decrypt();
+std::string secret = skCrypt("").decrypt();
+std::string version = skCrypt("").decrypt();
 std::string url = skCrypt("https://keyauth.win/api/1.3/").decrypt();
 std::string path = skCrypt("").decrypt();
 
 api KeyAuthApp(name, ownerid, version, url, path);
+#pragma endregion
 
+#pragma region randomTitle
 static const char rnum[] = "0123456789" "qwertyuiopasdfghjklzxcvbnm" "QWERTYUIOPASDFGHJKLZXCVBNM";
 int staticLength = sizeof(rnum) - 1;
 std::string RandomTitle;
@@ -43,7 +49,9 @@ void SetRandomTitleThread() {
         std::this_thread::sleep_for(std::chrono::seconds(0));
     }
 }
+#pragma endregion
 
+#pragma region Blur
 typedef enum WINDOWCOMPOSITIONATTRIB {
     WCA_UNDEFINED,
     WCA_NCRENDERING_ENABLED,
@@ -70,13 +78,11 @@ typedef enum WINDOWCOMPOSITIONATTRIB {
     WCA_VISUAL_OWNER,
     WCA_LAST,
 } WINDOWCOMPOSITIONATTRIB;
-
 typedef struct WINDOWCOMPOSITIONATTRIBDATA {
     WINDOWCOMPOSITIONATTRIB Attrib;
     PVOID pvData;
     SIZE_T cbData;
 } WINDOWCOMPOSITIONATTRIBDATA;
-
 typedef enum ACCENT_STATE {
     ACCENT_DISABLED,
     ACCENT_ENABLE_GRADIENT,
@@ -84,18 +90,44 @@ typedef enum ACCENT_STATE {
     ACCENT_ENABLE_BLURBEHIND,
     ACCENT_INVALID_STATE
 } ACCENT_STATE;
-
 typedef struct ACCENT_POLICY {
     ACCENT_STATE AccentState;
     DWORD AccentFlags;
     DWORD GradientColor;
     DWORD AnimationId;
 } ACCENT_POLICY;
-
 typedef BOOL(WINAPI* pfnSetWindowCompositionAttribute)(HWND, WINDOWCOMPOSITIONATTRIBDATA*);
 static auto SetWindowCompositionAttribute = (pfnSetWindowCompositionAttribute)GetProcAddress(LoadLibrary("user32.dll"), "SetWindowCompositionAttribute");
+#pragma endregion
 
+#pragma region ASCII
+void SetConsoleColor(WORD color) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, color);
+}
+
+void AsciiName() {
+    std::cout << skCrypt(R"(
+           __ _                   _                         
+          / _(_)                 | |                        
+         | |_ _ _ __  _ __   __ _| |_   _ _ __   ___  _ __  
+         |  _| | '_ \| '_ \ / _` | | | | | '_ \ / _ \| '_ \ 
+         | | | | | | | | | | (_| | | |_| | | | | (_) | |_) |
+         |_| |_|_| |_|_| |_|\__,_|_|\__, |_| |_|\___/| .__/ 
+                                     __/ |           | |    
+                                    |___/            |_|                                                                                                             
+    )") << std::endl;
+
+    // Blue line
+    SetConsoleColor(8);
+    std::cout << "~~~~~~~~~~~~~~~~~~~~~~https://github.com/finnalynop~~~~~~~~~~~~~~~~~~~~~~\n" << std::endl;
+    SetConsoleColor(7); // Reset to default color
+}
+#pragma endregion
+
+#pragma region Auth
 bool AuthenticateUser() {
+    AsciiName();
     std::string key;
     std::cout << skCrypt("[ AUTH ] Enter license: ");
     std::cin >> key;
@@ -115,10 +147,21 @@ bool AuthenticateUser() {
         return false;
     }
 }
+#pragma endregion
+
+#pragma region Menu
+void cheatMenu() {
+    AsciiName();
+    std::cout << skCrypt("\n[ F ] WallHack") << std::endl;
+    std::cout << skCrypt("\n[ Z ] Chams") << std::endl;
+    std::cout << skCrypt("\n[ X ] WallHack v2") << std::endl;
+    std::cout << skCrypt("\n[ C ] Delete Effects on screen") << std::endl;
+}
+#pragma endregion
+
 
 int main()
 {
-
     HWND hWnd = GetConsoleWindow();
     HANDLE hStd = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -130,7 +173,8 @@ int main()
         data.cbData = sizeof(accent);
         SetWindowCompositionAttribute(hWnd, &data);
     }
-    //remove scroll bar
+
+    // Remove scroll bar
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(hStd, &csbi);
     COORD scrollbar = { csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1 };
@@ -164,27 +208,30 @@ int main()
 
     std::uintptr_t baseAddress = memory.GetModuleAddress("nvoglv64.dll");
     
+    const std::string spinner = "|/-\\";
     int attempt = 0;
-    do {
-        baseAddress = memory.GetModuleAddress("nvoglv64.dll");
-        if (!baseAddress) {
-            std::cout << "\r\t [ ATTEMPT " << ++attempt << " ] Still searching..." << std::flush;
-            Sleep(200);
-        }
-    } while (!baseAddress);
 
-    std::uintptr_t wallhackAddress = baseAddress + 0x7BC5B8;
-    std::uintptr_t chamsAddress = baseAddress + 0x7BBEB8;
+    do {
+        uintptr_t baseAddress = memory.GetModuleAddress("nvoglv64.dll");
+        bool baseAddressFound = (baseAddress != 0);
+        ++attempt;
+        std::cout << "\r" << "[ INFO ] Loading [" << spinner[attempt % spinner.length()] << "]";
+        std::cout.flush();
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+        if (baseAddressFound) break;
+    } while (true);
+
+    //Offsets
+    std::uintptr_t wallhackAddress = baseAddress + 0x7B4C0C;//updated
+    std::uintptr_t chamsAddress = baseAddress + 0x7B451C; //updated
 
     system("cls");
-    std::cout << skCrypt("\t\tDISCORD: https://discord.gg/Q7vHdgcb\n") << std::endl;
-    std::cout << skCrypt("\n[ VK_NUMPAD1 ] WallHack") << std::endl;
-    std::cout << skCrypt("\n[ VK_NUMPAD2 ] Chams") << std::endl;
-    std::cout << skCrypt("\n[ VK_NUMPAD3 ] WallHack v2") << std::endl;
-    std::cout << skCrypt("\n[ VK_NUMPAD4 ] Delete Effects on screen") << std::endl;
+    cheatMenu();
     while (true)
     {
-        if (GetAsyncKeyState(VK_NUMPAD1) & 0x8000)
+        if (GetAsyncKeyState(0x5A) & 0x8000) //F
         {
             BOOL result;
             SIZE_T bytesWritten;
@@ -217,7 +264,7 @@ int main()
             wallhackEnabled = !wallhackEnabled;
         }
         Sleep(50);
-        if (GetAsyncKeyState(VK_NUMPAD2) & 0x8000)
+        if (GetAsyncKeyState(0x58) & 0x8000) //Z
         {
             BOOL result;
             SIZE_T bytesWritten;
@@ -250,7 +297,7 @@ int main()
             chamsEnabled = !chamsEnabled;
         }
         Sleep(50);
-        if (GetAsyncKeyState(VK_NUMPAD3) & 0x8000)
+        if (GetAsyncKeyState(0x58) & 0x8000) //X
         {
             BOOL result;
             SIZE_T bytesWritten;
@@ -283,7 +330,7 @@ int main()
             wallhackEnabledv2 = !wallhackEnabledv2;
         }
         Sleep(50);
-        if (GetAsyncKeyState(VK_NUMPAD4) & 0x8000)
+        if (GetAsyncKeyState(0x43) & 0x8000) //C
         {
             BOOL result;
             SIZE_T bytesWritten;

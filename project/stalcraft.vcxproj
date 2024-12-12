@@ -80,7 +80,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>C:\Users\mao\Desktop\stalcraft\stalcraft\project\libs;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\mao\source\repos\stalcraft\project\libs;$(LibraryPath)</LibraryPath>
     <OutDir>build</OutDir>
     <IntDir>build/src</IntDir>
     <TargetName>loader</TargetName>
